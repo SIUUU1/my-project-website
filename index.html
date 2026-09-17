@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--
+  data-theme 속성으로 라이트/다크 모드를 제어합니다.
+  기본값은 light이며, JS(main.js)가 로컬스토리지/시스템 설정을 읽어 초기값을 다시 설정합니다.
+-->
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="개발·데이터·의료 도메인을 잇는 소프트웨어 엔지니어 안시우의 포트폴리오. 금융 SI 개발, 의료 데이터 구축, 의료 AI 서비스 프로젝트를 소개합니다." />
+  <title>안시우 — 소프트웨어 엔지니어 포트폴리오</title>
+
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- 외부 스타일시트 연결 -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- defer 속성으로 JavaScript 연결 (HTML 파싱을 막지 않음) -->
+  <script src="js/main.js" defer></script>
+</head>
+
+<body>
+  <!-- ===================== 헤더 / 네비게이션 ===================== -->
+  <header class="header" id="header">
+    <nav class="nav container" aria-label="주 메뉴">
+      <!-- 로고 (왼쪽) -->
+      <a href="#hero" class="nav__logo">
+        <span class="nav__logo-mark">&lt;/&gt;</span> 안시우
+      </a>
+
+      <!-- 데스크톱 메뉴 + 모바일 슬라이드 메뉴 (오른쪽) -->
+      <div class="nav__menu" id="navMenu">
+        <ul class="nav__list">
+          <li><a href="#hero" class="nav__link">홈</a></li>
+          <li><a href="#about" class="nav__link">소개</a></li>
+          <li><a href="#skills" class="nav__link">기술</a></li>
+          <li><a href="#experience" class="nav__link">경력</a></li>
+          <li><a href="#projects" class="nav__link">프로젝트</a></li>
+          <li><a href="#certs" class="nav__link">자격</a></li>
+          <li><a href="#contact" class="nav__link">연락</a></li>
+        </ul>
+      </div>
+
+      <div class="nav__actions">
+        <!-- 다크 모드 토글 버튼 -->
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="다크 모드로 전환">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+
+        <!-- 햄버거 버튼 (모바일에서만 노출) -->
+        <button class="icon-btn nav__toggle" id="navToggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="navMenu">
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="hero">
+      <div class="container hero__inner">
+        <p class="hero__eyebrow">// Software Engineer · 개발 × 데이터 × 의료</p>
+        <h1 class="hero__title">
+          안녕하세요,<br />
+          저는 <span class="hero__typed" id="typed" aria-live="polite"></span><span class="hero__cursor" aria-hidden="true">|</span>
+        </h1>
+        <p class="hero__lead">
+          금융 SI에서 검증 가능한 화면·기능을 직접 구현했고, 의료 데이터 구축으로 도메인을 이해했으며,
+          이제 의료 AI 서비스까지 만드는 — 개발·데이터·의료 도메인을 잇는 엔지니어입니다.
+        </p>
+        <div class="hero__actions">
+          <a href="#projects" class="btn btn--primary">프로젝트 보기</a>
+          <a href="https://github.com/SIUUU1" class="btn btn--ghost" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ABOUT ===================== -->
+    <section class="section about" id="about">
+      <div class="container about__inner reveal">
+        <div class="about__media">
+          <img
+            src="images/profile_image.png"
+            alt="안시우 프로필 이미지"
+            class="about__photo"
+            width="320"
+            height="406"
+          />
+        </div>
+        <div class="about__body">
+          <h2 class="section__title">소개</h2>
+          <p class="about__text">
+            간호학을 전공하고 oo대학병원에서 <strong>내시경 AI 학습용 데이터 구축</strong>에 참여하며
+            의료 데이터를 다뤘습니다. 이후 개발자로 전향해 <strong>oo은행 여신사후관리시스템 재구축</strong>
+            SI 프로젝트에서 화면·백엔드 기능을 개발했고, 의료·바이오 AI 과정에서는 응급실 AI 서비스
+            <strong>ER:ON</strong>을 팀장으로 설계부터 배포까지 완주했습니다.
+          </p>
+          <ul class="about__facts">
+            <li><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> 간호학 학사 · 간호사 면허</li>
+            <li><i class="fa-solid fa-briefcase" aria-hidden="true"></i> SI 개발 경력 10개월 </li>
+            <li><i class="fa-solid fa-heart-pulse" aria-hidden="true"></i> 관심 분야: 의료 AI 서비스, 금융·핀테크</li>
+          </ul>
+          <ul class="about__stats">
+            <li class="stat">
+              <strong class="stat__value">28개</strong>
+              <span class="stat__label">금융 SI 화면·팝업 개발</span>
+            </li>
+            <li class="stat">
+              <strong class="stat__value">4만 장</strong>
+              <span class="stat__label">내시경 AI 데이터셋 구축 기여</span>
+            </li>
+            <li class="stat">
+              <strong class="stat__value">최우수상</strong>
+              <span class="stat__label">SeSAC PBL · 4개 팀 중 2위</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SKILLS ===================== -->
+    <section class="section skills" id="skills">
+      <div class="container">
+        <h2 class="section__title reveal">기술 스택</h2>
+        <p class="section__subtitle reveal">실무와 프로젝트에서 사용한 도구들입니다.</p>
+        <ul class="skills__grid">
+          <li class="skill-card reveal">
+            <i class="fa-solid fa-server skill-card__icon" aria-hidden="true"></i>
+            <h3 class="skill-card__name">Backend</h3>
+            <ul class="tag-list tag-list--center">
+              <li>Java</li><li>Python</li><li>Spring</li><li>Spring Boot</li><li>JSP/Servlet</li><li>MyBatis</li>
+            </ul>
+          </li>
+          <li class="skill-card reveal">
+            <i class="fa-solid fa-laptop-code skill-card__icon" aria-hidden="true"></i>
+            <h3 class="skill-card__name">Frontend</h3>
+            <ul class="tag-list tag-list--center">
+              <li>JavaScript</li><li>React</li><li>jQuery</li><li>HTML5/CSS3</li><li>Nexacro</li><li>Ajax</li>
+            </ul>
+          </li>
+          <li class="skill-card reveal">
+            <i class="fa-solid fa-database skill-card__icon" aria-hidden="true"></i>
+            <h3 class="skill-card__name">Database</h3>
+            <ul class="tag-list tag-list--center">
+              <li>Oracle</li><li>Tibero</li><li>PostgreSQL</li><li>Redis</li><li>SQL/ETL</li>
+            </ul>
+          </li>
+          <li class="skill-card reveal">
+            <i class="fa-brands fa-docker skill-card__icon" aria-hidden="true"></i>
+            <h3 class="skill-card__name">Infra · DevOps</h3>
+            <ul class="tag-list tag-list--center">
+              <li>Docker</li><li>Kubernetes(K8s)</li><li>Oracle Cloud Infrastructure(OCI)</li>
+            </ul>
+          </li>
+          <li class="skill-card reveal">
+            <i class="fa-solid fa-brain skill-card__icon" aria-hidden="true"></i>
+            <h3 class="skill-card__name">AI / Data</h3>
+            <ul class="tag-list tag-list--center">
+              <li>Python</li><li>Pandas</li><li>ML/DL/LLM</li><li>NLP·RAG·VectorDB</li><li>API·Agent</li>
+            </ul>
+          </li>
+          <li class="skill-card reveal">
+            <i class="fa-brands fa-git-alt skill-card__icon" aria-hidden="true"></i>
+            <h3 class="skill-card__name">협업 · 도구</h3>
+            <ul class="tag-list tag-list--center">
+              <li>Git</li><li>GitHub</li><li>SourceTree</li><li>Eclipse</li><li>VS Code</li><li>Cursor</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== EXPERIENCE (경력 · 교육, 최신순) ===================== -->
+    <section class="section experience" id="experience">
+      <div class="container">
+        <h2 class="section__title reveal">경력 · 교육</h2>
+        <p class="section__subtitle reveal">최근 이력부터 순서대로 정리했습니다.</p>
+        <ol class="timeline">
+          <li class="timeline__item is-current reveal">
+            <div class="timeline__meta">
+              <span class="timeline__period">진행 중</span>
+              <span class="timeline__kind">교육</span>
+            </div>
+            <h3 class="timeline__title">코디세이(Codyssey) AI·SW 혁신 교육과정</h3>
+            <p class="timeline__org">이노베이션아카데미 · 과학기술정보통신부·IITP 기획</p>
+            <p class="timeline__desc">동료학습·PBL 기반 AI·SW 인재 양성 과정에 참여해 실전형 AI 개발 역량을 심화하고 있습니다.</p>
+          </li>
+          <li class="timeline__item is-current reveal">
+            <div class="timeline__meta">
+              <span class="timeline__period">진행 중</span>
+              <span class="timeline__kind">교육</span>
+            </div>
+            <h3 class="timeline__title">서울 핀테크 아카데미</h3>
+            <p class="timeline__org">서울시 · 금융감독원 공동 운영</p>
+            <p class="timeline__desc">지자체 최초의 핀테크 전문 교육과정에 선발되어, 기업은행 여신 SI 개발 경험 위에 금융 도메인 지식과 핀테크 서비스 실무를 더하고 있습니다.</p>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta">
+              <span class="timeline__period">2026.05 – 2026.09</span>
+              <span class="timeline__kind">교육 · 수료</span>
+            </div>
+            <h3 class="timeline__title">Oracle 의료·바이오 AI Service Architect 과정</h3>
+            <p class="timeline__org">서울시 청년취업사관학교(SeSAC) · Oracle</p>
+            <p class="timeline__desc">560시간 실무 1–2년차 수준 과정에서 SQL·ETL·데이터 모델링, OCI 클라우드/AI 인프라, ML·DL·LLM, NLP·RAG·VectorDB, API·Agent, MLOps/LLMOps를 학습하고, 최종 PBL 프로젝트 ER:ON을 팀장으로 이끌었습니다.</p>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta">
+              <span class="timeline__period">2024.11 – 2025.08</span>
+              <span class="timeline__kind">경력</span>
+            </div>
+            <h3 class="timeline__title">oo정보 — SI 개발</h3>
+            <p class="timeline__org">oo은행 여신사후관리시스템 재구축</p>
+            <p class="timeline__desc">경공매·개별충당금·신용보증 영역의 화면·백엔드 기능을 담당하고, 공매·기계공매 파트 주 담당으로 총 28개 화면/팝업을 개발했습니다.</p>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta">
+              <span class="timeline__period">2024.02 – 2024.08</span>
+              <span class="timeline__kind">교육</span>
+            </div>
+            <h3 class="timeline__title">자바 기반 풀스택 개발자 양성과정</h3>
+            <p class="timeline__org">KH정보교육원</p>
+            <p class="timeline__desc">세미·파이널 웹 팀 프로젝트를 모두 팀장으로 수행하며 JSP/MVC2에서 React/Spring Boot까지 기술 범위를 넓혔습니다.</p>
+          </li>
+          <li class="timeline__item reveal">
+            <div class="timeline__meta">
+              <span class="timeline__period">2023.07 – 2023.12</span>
+              <span class="timeline__kind">경력</span>
+            </div>
+            <h3 class="timeline__title">oo대학병원 위장관외과 — CRC</h3>
+            <p class="timeline__org">내시경 AI 학습용 데이터 구축 국책 과제</p>
+            <p class="timeline__desc">실제 위·대장 내시경 임상 데이터를 수집·비식별화하고, 라벨링 QA와 합성데이터 정합성 검토를 수행했습니다.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== PROJECTS ===================== -->
+    <section class="section projects" id="projects">
+      <div class="container">
+        <h2 class="section__title reveal">프로젝트</h2>
+        <p class="section__subtitle reveal">최신 프로젝트부터 순서대로 소개합니다.</p>
+
+        <!-- 주요 프로젝트: main.js의 FEATURED_PROJECTS 데이터를 최신순으로 정렬해 렌더링 -->
+        <h3 class="projects__heading reveal">주요 프로젝트</h3>
+        <div class="projects__featured" id="featuredProjects"></div>
+
+        <!-- GitHub 저장소: API로 불러와 생성일 기준 최신순으로 렌더링 -->
+        <h3 class="projects__heading projects__heading--spaced reveal">GitHub 저장소</h3>
+        <p class="projects__caption reveal">GitHub API로 실시간으로 불러오며, 최근에 만든 저장소부터 보여줍니다.</p>
+
+        <!-- [보너스] 언어별 필터 버튼: JS가 데이터 로드 후 동적으로 채움 -->
+        <div class="projects__filters" id="projectFilters" role="group" aria-label="언어별 필터"></div>
+
+        <!--
+          상태(로딩/성공/에러/빈)가 표시되는 영역.
+          JS가 이 안의 내용을 상태에 따라 교체합니다.
+        -->
+        <div class="projects__view" id="projectsView" aria-live="polite">
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CERTIFICATIONS ===================== -->
+    <section class="section certs" id="certs">
+      <div class="container">
+        <h2 class="section__title reveal">자격</h2>
+        <p class="section__subtitle reveal">취득한 자격증과 면허입니다.</p>
+        <ul class="certs__grid">
+          <li class="cert-card reveal">
+            <i class="fa-solid fa-laptop-code cert-card__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="cert-card__name">정보처리기사</h3>
+              <p class="cert-card__meta">2024.09 · 한국산업인력공단</p>
+            </div>
+          </li>
+          <li class="cert-card reveal">
+            <i class="fa-solid fa-database cert-card__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="cert-card__name">SQLD (SQL개발자)</h3>
+              <p class="cert-card__meta">2024.09 · 한국데이터베이스진흥센터</p>
+            </div>
+          </li>
+          <li class="cert-card reveal">
+            <i class="fa-solid fa-chart-column cert-card__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="cert-card__name">ADsP (데이터분석 준전문가)</h3>
+              <p class="cert-card__meta">2026.08 · 한국데이터산업진흥원</p>
+            </div>
+          </li>
+          <li class="cert-card reveal">
+            <i class="fa-solid fa-user-nurse cert-card__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="cert-card__name">간호사 면허</h3>
+              <p class="cert-card__meta">2023.03 · 보건복지부</p>
+            </div>
+          </li>
+          <li class="cert-card reveal">
+            <i class="fa-solid fa-table cert-card__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="cert-card__name">컴퓨터활용능력 2급</h3>
+              <p class="cert-card__meta">2023.09 · 대한상공회의소</p>
+            </div>
+          </li>
+          <li class="cert-card reveal">
+            <i class="fa-solid fa-landmark cert-card__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="cert-card__name">한국사능력검정시험 2급</h3>
+              <p class="cert-card__meta">2026.08 · 국사편찬위원회</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section class="section contact" id="contact">
+      <div class="container contact__inner reveal">
+        <h2 class="section__title">연락하기</h2>
+        <p class="section__subtitle">
+          채용·협업 관련 문의나 궁금한 점이 있다면 메시지를 남겨주세요.<br />
+        </p>
+
+        <!-- novalidate: 브라우저 기본 검증 대신 JS로 직접 검증 -->
+        <form class="form" id="contactForm" novalidate>
+          <div class="form__field">
+            <label class="form__label" for="name">이름</label>
+            <input class="form__input" type="text" id="name" name="name" placeholder="홍길동" />
+            <p class="form__error" id="nameError" aria-live="polite"></p>
+          </div>
+
+          <div class="form__field">
+            <label class="form__label" for="email">이메일</label>
+            <input class="form__input" type="email" id="email" name="email" placeholder="you@example.com" />
+            <p class="form__error" id="emailError" aria-live="polite"></p>
+          </div>
+
+          <div class="form__field">
+            <label class="form__label" for="message">메시지</label>
+            <textarea class="form__input form__textarea" id="message" name="message" rows="5" placeholder="내용을 입력하세요"></textarea>
+            <p class="form__error" id="messageError" aria-live="polite"></p>
+          </div>
+
+          <!-- 스팸 방지(honeypot): 사람에게는 보이지 않고, 봇이 체크하면 Web3Forms가 거부 -->
+          <input type="checkbox" name="botcheck" class="form__honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+          <button class="btn btn--primary form__submit" type="submit">메시지 보내기</button>
+
+          <!-- 전송 결과(성공/실패) 메시지 -->
+          <p class="form__status" id="formStatus" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p class="footer__copy">© 2026 안시우. Build. Learn. Evolve.</p>
+      <ul class="footer__social">
+        <li>
+          <a href="https://github.com/SIUUU1" class="footer__link" target="_blank" rel="noopener" aria-label="GitHub">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li>
+          <a href="mailto:jumia011@gmail.com" class="footer__link" aria-label="이메일">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- 토스트 알림 (메일 전송 성공 시 노출, 10초 후 자동으로 사라짐) -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check toast__icon" aria-hidden="true"></i>
+    <p class="toast__text" id="toastText"></p>
+    <button class="toast__close" id="toastClose" type="button" aria-label="알림 닫기">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- 스크롤 탑 버튼 (300px 이상 스크롤 시 노출) -->
+  <button class="scroll-top" id="scrollTop" type="button" aria-label="맨 위로 이동">
+    <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+  </button>
+</body>
+</html>
