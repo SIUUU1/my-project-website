@@ -13,16 +13,6 @@
 | 배포 사이트 (GitHub Pages) | https://siuuu1.github.io/my-project-website/ |
 | GitHub 저장소 | https://github.com/SIUUU1/my-project-website |
 
-## 📸 스크린샷
-
-| 데스크톱 (라이트) | 데스크톱 (다크) |
-| --- | --- |
-| ![데스크톱 라이트 모드 Hero 화면](images/screenshots/desktop-light.png) | ![데스크톱 다크 모드 프로젝트 화면](images/screenshots/desktop-dark.png) |
-
-| 모바일 (햄버거 메뉴 열림) | 모바일 (다크) |
-| --- | --- |
-| <img src="images/screenshots/mobile-light.png" alt="모바일 햄버거 메뉴가 열린 화면" width="280" /> | <img src="images/screenshots/mobile-dark.png" alt="모바일 다크 모드 소개 화면" width="280" /> |
-
 ## 🧩 페이지 구성
 
 | 섹션 | 내용 |
