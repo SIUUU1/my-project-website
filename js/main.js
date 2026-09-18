@@ -225,7 +225,8 @@ initTyping();
 
 /* =========================================================================
    7. 폼 유효성 검사 + 메일 발송(Web3Forms)  [상태 → 렌더링 #2]
-      입력칸에서 나갈 때(blur) · 제출할 때 → 검증 → 에러 메시지 표시/숨김
+      입력하는 즉시(input) · 입력칸에서 나갈 때(blur) · 제출할 때 → 검증
+      → formState(에러 상태) 변경 → 에러 메시지 표시/숨김
       검증 통과 시 Web3Forms API로 전송 → 전송 중 / 성공(토스트) / 실패(폼 아래 메시지)
 ========================================================================= */
 
@@ -259,46 +260,65 @@ $("#toastClose").addEventListener("click", hideToast);
 /* 이메일 형식 검증용 정규식 */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* 필드별 검증 규칙: 위에서부터 검사해 처음 실패한 규칙의 메시지를 표시 */
+/* 필드별 검증 규칙: 위에서부터 검사해 처음 실패한 규칙의 메시지를 표시
+   - live: true  → 입력하는 즉시 검사 (필수값 누락은 바로 알려주는 편이 친절)
+   - live: false → 첫 blur/제출 이후부터 즉시 검사
+     (이메일을 두 글자 쳤을 뿐인데 "형식이 아닙니다"가 뜨는 것을 막기 위함) */
 const RULES = {
-  name: [{ test: (v) => v !== "", msg: "이름을 입력해주세요." }],
+  name: [{ test: (v) => v !== "", msg: "이름을 입력해주세요.", live: true }],
   email: [
-    { test: (v) => v !== "", msg: "이메일을 입력해주세요." },
+    { test: (v) => v !== "", msg: "이메일을 입력해주세요.", live: true },
     { test: (v) => EMAIL_RE.test(v), msg: "올바른 이메일 형식이 아닙니다." },
   ],
-  message: [{ test: (v) => v !== "", msg: "메시지를 입력해주세요." }],
+  message: [{ test: (v) => v !== "", msg: "메시지를 입력해주세요.", live: true }],
 };
 
 const fieldInputs = Object.keys(RULES).map((id) => $(`#${id}`));
 
-/* 특정 필드에 에러를 표시하는 함수 */
-const showError = (input, errorEl, message) => {
-  errorEl.textContent = message;
-  input.classList.add("has-error");
+/* 폼의 검증 상태를 한 객체로 관리 (프로젝트 섹션의 projectState 와 같은 방식) */
+const formState = {
+  touched: new Set(), // 한 번이라도 blur/제출을 거친 필드 id (= 모든 규칙을 적용할 필드)
+  errors: {},         // { 필드id: 에러 메시지 } — 빈 문자열이면 통과
 };
 
-/* 특정 필드의 에러를 지우는 함수 */
-const clearError = (input, errorEl) => {
-  errorEl.textContent = "";
-  input.classList.remove("has-error");
-};
-
-/* 필드 1개를 검증하고 통과 여부(boolean)를 반환 (blur · submit 공용) */
-const validateField = (input) => {
-  const errorEl = $(`#${input.id}Error`);
+/* 값 → 에러 메시지 계산 (화면은 건드리지 않는 순수 함수)
+   liveOnly 면 live 규칙만 검사한다 */
+const getFieldError = (input, liveOnly) => {
+  const value = input.value.trim();
+  const rules = liveOnly ? RULES[input.id].filter((rule) => rule.live) : RULES[input.id];
   // find 로 "처음 실패한 규칙"만 골라내기
-  const failed = RULES[input.id].find(({ test }) => !test(input.value.trim()));
+  return rules.find(({ test }) => !test(value))?.msg ?? "";
+};
 
-  if (failed) {
-    showError(input, errorEl, failed.msg);
-    return false;
-  }
-  clearError(input, errorEl);
-  return true;
+/* 상태(formState.errors) → 화면(에러 문구 · 빨간 테두리 · aria-invalid) 반영 */
+const renderFieldError = (input) => {
+  const message = formState.errors[input.id] ?? "";
+  $(`#${input.id}Error`).textContent = message;
+  input.classList.toggle("has-error", message !== "");
+  input.setAttribute("aria-invalid", String(message !== ""));
+};
+
+/* 필드 1개를 검증하고 통과 여부(boolean)를 반환 (input · blur · submit 공용)
+   live=true (입력 중)일 때, 아직 손대지 않은 필드는 live 규칙만 검사 */
+const validateField = (input, live = false) => {
+  if (!live) formState.touched.add(input.id); // blur/제출 = 이 필드를 본격 검증 대상으로 승격
+
+  const liveOnly = live && !formState.touched.has(input.id);
+  formState.errors[input.id] = getFieldError(input, liveOnly); // 상태 변경
+  renderFieldError(input);                                     // 렌더링
+
+  return formState.errors[input.id] === "";
 };
 
 /* 폼 전체 검증: 모든 필드의 에러를 한 번에 보여주기 위해 map으로 전부 검사한 뒤 every로 판정 */
-const validateForm = () => fieldInputs.map(validateField).every(Boolean);
+const validateForm = () => fieldInputs.map((input) => validateField(input)).every(Boolean);
+
+/* 검증 상태 초기화 (전송 성공 후 폼을 비울 때) */
+const resetValidation = () => {
+  formState.touched.clear();
+  formState.errors = {};
+  fieldInputs.forEach(renderFieldError);
+};
 
 /* 전송 상태 메시지 렌더링 (type: "success" | "error" | "") */
 const setStatus = (text, type = "") => {
@@ -356,6 +376,7 @@ form.addEventListener("submit", async (event) => {
     await sendMessage();
     showToast("메시지가 전송되었습니다. 확인 후 답장드리겠습니다. 감사합니다!");
     form.reset();
+    resetValidation(); // 값이 비워졌으므로 에러 표시도 함께 초기화
   } catch (error) {
     setStatus(`${error.message} 잠시 후 다시 시도하시거나 jumia011@gmail.com으로 직접 보내주세요.`, "error");
   } finally {
@@ -365,14 +386,14 @@ form.addEventListener("submit", async (event) => {
 });
 
 fieldInputs.forEach((input) => {
-  /* blur 이벤트: 입력칸에서 나갈 때 해당 필드 검증 */
-  input.addEventListener("blur", () => validateField(input));
-
-  /* input 이벤트: 입력하는 즉시 해당 필드 에러와 전송 메시지를 지워 UX 개선 */
+  /* input 이벤트: 입력하는 즉시 검증 → 누락·형식 오류를 바로 표시하고, 고치는 순간 바로 사라짐 */
   input.addEventListener("input", () => {
-    clearError(input, $(`#${input.id}Error`));
+    validateField(input, true);
     setStatus("");
   });
+
+  /* blur 이벤트: 입력칸에서 나갈 때 모든 규칙으로 검증 (이후에는 입력 중에도 즉시 반영) */
+  input.addEventListener("blur", () => validateField(input));
 });
 
 /* =========================================================================
