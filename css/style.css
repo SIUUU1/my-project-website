@@ -950,6 +950,32 @@ h4 {
   min-height: 1.1rem;
 }
 
+/* 에러 메시지와 글자 수 카운터를 한 줄에 좌·우로 배치 */
+.form__field-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.form__field-foot .form__error {
+  flex: 1;
+}
+
+.form__counter {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums; /* 숫자 폭 고정 — 타이핑할 때 흔들리지 않음 */
+  min-height: 1.1rem;
+}
+
+/* 한도의 90%를 넘기면 색으로 미리 알림 */
+.form__counter.is-near-limit {
+  color: var(--danger);
+  font-weight: 600;
+}
+
 .form__submit {
   justify-self: start;
 }

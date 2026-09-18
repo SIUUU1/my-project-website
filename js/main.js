@@ -128,7 +128,8 @@ $$(".nav__link").forEach((link) => {
 $$('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", (event) => {
     const targetId = anchor.getAttribute("href");
-    if (targetId === "#") return;
+    // '#' 뿐이거나, JS가 나중에 href를 바꾼 경우(푸터 이메일 → mailto:)는 그냥 기본 동작에 맡김
+    if (!targetId.startsWith("#") || targetId === "#") return;
 
     const target = $(targetId);
     if (target) {
@@ -230,6 +231,20 @@ initTyping();
       검증 통과 시 Web3Forms API로 전송 → 전송 중 / 성공(토스트) / 실패(폼 아래 메시지)
 ========================================================================= */
 
+/* --- 연락처 이메일 --------------------------------------------------------
+   주소를 HTML에 그대로 적어 두면 스팸 봇이 페이지를 긁어갈 때 정규식 한 번으로
+   수집됩니다. 그래서 조각으로 나눠 두고 실행 시점에 합칩니다.
+   (비밀로 감추는 것이 아니라 "기계가 자동으로 긁어가기 어렵게" 만드는 것이 목적) */
+const EMAIL_PARTS = ["jumia011", "gmail", "com"];
+const contactEmail = () => `${EMAIL_PARTS[0]}@${EMAIL_PARTS[1]}.${EMAIL_PARTS[2]}`;
+
+/* 푸터의 이메일 아이콘: HTML에는 #contact 로 두고, JS가 mailto 링크로 교체 */
+const emailLink = $("#emailLink");
+if (emailLink) {
+  emailLink.href = `mailto:${contactEmail()}`;
+  emailLink.setAttribute("aria-label", "이메일 보내기");
+}
+
 /* Web3Forms 액세스 키: 공개용 키 */
 const WEB3FORMS_ACCESS_KEY = "d9f82be9-1d7b-4bd3-8479-93f3febd9d2c";
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
@@ -264,13 +279,28 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
    - live: true  → 입력하는 즉시 검사 (필수값 누락은 바로 알려주는 편이 친절)
    - live: false → 첫 blur/제출 이후부터 즉시 검사
      (이메일을 두 글자 쳤을 뿐인데 "형식이 아닙니다"가 뜨는 것을 막기 위함) */
+/* 길이 제한 규칙: 숫자를 JS에 또 적지 않고 HTML의 maxlength 속성을 그대로 읽어옵니다.
+   (maxlength 가 입력 자체를 막아 주지만, 붙여넣기·자동완성 등을 대비한 이중 안전장치) */
+const maxLengthRule = {
+  test: (v, input) => input.maxLength <= 0 || v.length <= input.maxLength,
+  msg: (input) => `${input.maxLength}자 이내로 입력해주세요.`,
+  live: true,
+};
+
 const RULES = {
-  name: [{ test: (v) => v !== "", msg: "이름을 입력해주세요.", live: true }],
+  name: [
+    { test: (v) => v !== "", msg: "이름을 입력해주세요.", live: true },
+    maxLengthRule,
+  ],
   email: [
     { test: (v) => v !== "", msg: "이메일을 입력해주세요.", live: true },
     { test: (v) => EMAIL_RE.test(v), msg: "올바른 이메일 형식이 아닙니다." },
+    maxLengthRule,
   ],
-  message: [{ test: (v) => v !== "", msg: "메시지를 입력해주세요.", live: true }],
+  message: [
+    { test: (v) => v !== "", msg: "메시지를 입력해주세요.", live: true },
+    maxLengthRule,
+  ],
 };
 
 const fieldInputs = Object.keys(RULES).map((id) => $(`#${id}`));
@@ -281,13 +311,16 @@ const formState = {
   errors: {},         // { 필드id: 에러 메시지 } — 빈 문자열이면 통과
 };
 
-/* 값 → 에러 메시지 계산 (화면은 건드리지 않는 순수 함수)
+/* 값 → 에러 메시지 계산
    liveOnly 면 live 규칙만 검사한다 */
 const getFieldError = (input, liveOnly) => {
   const value = input.value.trim();
   const rules = liveOnly ? RULES[input.id].filter((rule) => rule.live) : RULES[input.id];
   // find 로 "처음 실패한 규칙"만 골라내기
-  return rules.find(({ test }) => !test(value))?.msg ?? "";
+  const failed = rules.find(({ test }) => !test(value, input));
+  if (!failed) return "";
+  // msg 는 문자열이거나, 입력칸 정보가 필요한 경우(길이 제한) 함수일 수 있음
+  return typeof failed.msg === "function" ? failed.msg(input) : failed.msg;
 };
 
 /* 상태(formState.errors) → 화면(에러 문구 · 빨간 테두리 · aria-invalid) 반영 */
@@ -296,6 +329,17 @@ const renderFieldError = (input) => {
   $(`#${input.id}Error`).textContent = message;
   input.classList.toggle("has-error", message !== "");
   input.setAttribute("aria-invalid", String(message !== ""));
+};
+
+/* 글자 수 카운터 렌더링: #<필드id>Counter 요소가 있는 필드만 갱신
+   maxlength 는 한도에 닿으면 아무 말 없이 입력을 막기 때문에, 남은 양을 눈으로 보여준다 */
+const renderCounter = (input) => {
+  const counter = $(`#${input.id}Counter`);
+  if (!counter || input.maxLength <= 0) return;
+
+  const { length } = input.value; // maxlength 와 기준을 맞추려고 trim 하지 않음
+  counter.textContent = `${length} / ${input.maxLength}`;
+  counter.classList.toggle("is-near-limit", length >= input.maxLength * 0.9);
 };
 
 /* 필드 1개를 검증하고 통과 여부(boolean)를 반환 (input · blur · submit 공용)
@@ -317,7 +361,10 @@ const validateForm = () => fieldInputs.map((input) => validateField(input)).ever
 const resetValidation = () => {
   formState.touched.clear();
   formState.errors = {};
-  fieldInputs.forEach(renderFieldError);
+  fieldInputs.forEach((input) => {
+    renderFieldError(input);
+    renderCounter(input);
+  });
 };
 
 /* 전송 상태 메시지 렌더링 (type: "success" | "error" | "") */
@@ -378,7 +425,7 @@ form.addEventListener("submit", async (event) => {
     form.reset();
     resetValidation(); // 값이 비워졌으므로 에러 표시도 함께 초기화
   } catch (error) {
-    setStatus(`${error.message} 잠시 후 다시 시도하시거나 jumia011@gmail.com으로 직접 보내주세요.`, "error");
+    setStatus(`${error.message} 잠시 후 다시 시도하시거나 ${contactEmail()}으로 직접 보내주세요.`, "error");
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "메시지 보내기";
@@ -389,11 +436,14 @@ fieldInputs.forEach((input) => {
   /* input 이벤트: 입력하는 즉시 검증 → 누락·형식 오류를 바로 표시하고, 고치는 순간 바로 사라짐 */
   input.addEventListener("input", () => {
     validateField(input, true);
+    renderCounter(input);
     setStatus("");
   });
 
   /* blur 이벤트: 입력칸에서 나갈 때 모든 규칙으로 검증 (이후에는 입력 중에도 즉시 반영) */
   input.addEventListener("blur", () => validateField(input));
+
+  renderCounter(input); // 로드 직후 1회 (새로고침 시 브라우저가 값을 복원하는 경우 대비)
 });
 
 /* =========================================================================

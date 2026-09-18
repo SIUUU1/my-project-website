@@ -339,20 +339,24 @@
         <form class="form" id="contactForm" novalidate>
           <div class="form__field">
             <label class="form__label" for="name">이름</label>
-            <input class="form__input" type="text" id="name" name="name" placeholder="홍길동" />
+            <input class="form__input" type="text" id="name" name="name" placeholder="홍길동" maxlength="40" autocomplete="name" />
             <p class="form__error" id="nameError" aria-live="polite"></p>
           </div>
 
           <div class="form__field">
             <label class="form__label" for="email">이메일</label>
-            <input class="form__input" type="email" id="email" name="email" placeholder="you@example.com" />
+            <input class="form__input" type="email" id="email" name="email" placeholder="you@example.com" maxlength="254" autocomplete="email" />
             <p class="form__error" id="emailError" aria-live="polite"></p>
           </div>
 
           <div class="form__field">
             <label class="form__label" for="message">메시지</label>
-            <textarea class="form__input form__textarea" id="message" name="message" rows="5" placeholder="내용을 입력하세요"></textarea>
-            <p class="form__error" id="messageError" aria-live="polite"></p>
+            <textarea class="form__input form__textarea" id="message" name="message" rows="5" placeholder="내용을 입력하세요" maxlength="1000" aria-describedby="messageCounter"></textarea>
+            <div class="form__field-foot">
+              <p class="form__error" id="messageError" aria-live="polite"></p>
+              <!-- 글자 수 카운터: maxlength 로 입력이 조용히 막히는 것을 사용자가 알 수 있도록 -->
+              <p class="form__counter" id="messageCounter"></p>
+            </div>
           </div>
 
           <!-- 스팸 방지(honeypot): 사람에게는 보이지 않고, 봇이 체크하면 Web3Forms가 거부 -->
@@ -378,7 +382,9 @@
           </a>
         </li>
         <li>
-          <a href="mailto:jumia011@gmail.com" class="footer__link" aria-label="이메일">
+          <!-- 스팸 봇의 주소 수집을 피하려고 주소를 HTML에 적지 않고 JS가 실행 시점에 조립합니다.
+               (JS가 꺼져 있으면 문의 폼으로 이동하는 링크로 동작) -->
+          <a href="#contact" class="footer__link" id="emailLink" aria-label="이메일로 문의">
             <i class="fa-solid fa-envelope" aria-hidden="true"></i>
           </a>
         </li>
