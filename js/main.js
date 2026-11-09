@@ -453,12 +453,34 @@ fieldInputs.forEach((input) => {
 ========================================================================= */
 const FEATURED_PROJECTS = [
   {
+    title: "mungo (PawPath)",
+    subtitle: "반려견 맞춤 산책 시간·코스 추천 서비스",
+    period: "2026.10 – 2026.11",
+    sortKey: "2026-11",
+    context: "2026 코디세이 AI 해커톤 · 팀 김피탕(4인) · 추천 엔진·백엔드·GPS 길 안내 구현",
+    summary:
+      "반려견의 나이·체급·활동량·성격과 보호자 일정, 시간별 날씨, 코스 주변 환경(도로·조명·노면·그늘·시설)을 함께 계산해 ‘언제, 어디로, 왜’ 걸어야 할지 근거와 함께 답하는 산책 추천 서비스입니다.",
+    highlights: [
+      "<strong>안전 선필터</strong> 설계: v1의 단일 가중합에서 ‘안전 평가를 통과한 코스만 개인화 점수로 경쟁’하는 구조로 바꿔, 위험 코스가 안전 코스보다 높게 추천되던 비율 2.3% → 0% (조건 조합 5,832회 점검)",
+      "외부 AI 호출 없이 규칙 기반 개인화 추천 엔진(rule-v2)을 직접 구현 — 반려견 특성·사용자 선호·거리/시간·날씨/환경 가중 점수, 데이터 없는 항목은 가중치 재분배",
+      "Google OAuth 2.0 / OIDC를 전용 라이브러리 없이 HTTPX로 직접 구현 (PKCE·state·nonce·ID 토큰 검증)",
+      "GPX 파서를 표준 라이브러리 expat 기반으로 직접 구현하며 XXE·엔티티 폭탄 차단",
+      "브라우저 내 TypeScript 모듈로 GPS 길 안내 구현 — 회전 안내·경로 이탈 재탐색, 산책 중 날씨 재평가 시 복귀 경로 안내 (위치 데이터를 서버로 보내지 않음)",
+      "피드백 온라인 학습을 외부 ML 라이브러리 없이 순수 Python으로 구현(베이즈 축소 평균·정규화 LMS), 조정 폭 ±15점 제한으로 순위 급변 방지",
+      "LLM(로컬 Ollama)을 점수 산출에서 분리하고 사실 검증 가드(explain_guard)를 통과한 문장만 노출",
+    ],
+    stack: ["FastAPI", "Python", "SQLAlchemy", "PostgreSQL", "React", "TypeScript", "Vite", "Tailwind CSS", "Leaflet/OSM", "Docker Compose"],
+    links: [
+      { label: "GitHub", url: "https://github.com/Kim-pitang/pawpath" },
+    ],
+  },
+  {
     title: "ER:ON",
     subtitle: "응급실 악화 예측·기록 지원 시스템",
     period: "2026.05 – 2026.09",
     sortKey: "2026-09",
     context: "SeSAC 의료·바이오 AI 과정 PBL · 팀장",
-    badge: "최우수상",
+    badge: "서울시장상",
     summary:
       "MIMIC-IV 실제 응급실 데이터로 성인 내원 환자의 악화 위험을 실시간 예측하고, 음성 인식으로 응급진료기록 초안까지 생성하는 응급실 AI 서비스입니다.",
     highlights: [
@@ -467,10 +489,14 @@ const FEATURED_PROJECTS = [
       "데이터 드리프트(PSI)·라벨 재현·온라인/배치 일치 검증을 포함한 MLOps 모니터링 화면과 회귀 테스트 구축 — 온라인/배치 위험도 오차 0 검증",
       "Docker Compose·Nginx 리버스 프록시로 다중 서비스를 컨테이너화해 OCI에 자체 도메인 HTTPS로 배포",
       "총 4개 팀 중 2위(최우수상) 수상",
+      "2026 청년취업사관학교 AI 인재 페스티벌 우수 프로젝트 성과발표회 <strong>서울시장상</strong> 수상",
+      "‘모두의 창업’ 1라운드 진출 — 현재 진행 중",
     ],
     note: "LLM 기반 기록 초안·음성 인식(STT)은 팀원과 협업",
     stack: ["FastAPI", "SQLAlchemy", "PostgreSQL", "pgvector", "Docker Compose", "Nginx", "OCI", "MLOps"],
-    links: [{ label: "GitHub", url: "https://github.com/SIUUU1/eron-project" }],
+    links: [
+      { label: "프로젝트 소개 사이트", url: "https://eron.co.kr", icon: "fa-solid fa-globe" },
+    ],
   },
   {
     title: "oo은행 여신사후관리시스템 재구축",
