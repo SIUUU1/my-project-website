@@ -504,7 +504,7 @@ const FEATURED_PROJECTS = [
     highlights: [
       "FastAPI·SQLAlchemy·PostgreSQL(pgvector)로 응급실 현황·환자 모니터링 API 구현",
       "악화 예측 모델을 마이크로서비스로 분리해 체류 1시간 후부터 매시간 향후 3시간 악화 위험을 재예측",
-      "MIMIC-IV-ED 42만 건으로 LightGBM 3-seed + Platt 보정 모델 학습(feature 100개, 환자축·시간축 누출 차단) — <strong>PR-AUC 0.664 · Recall 0.83</strong>, 실측 악화율 고위험군 <strong>52.4%</strong> vs 저위험군 <strong>0.4%</strong>",
+      "MIMIC-IV-ED 42만 건으로 LightGBM 3-seed + Platt 보정 모델 학습(feature 100개, 환자축·시간축 누출 차단) — 양성률 2.3% 불균형에서 <strong>PR-AUC 0.664 · Recall 0.83</strong>",
       "SHAP 기여도·실제 값 변화·임상적 악화 방향 <strong>3중 게이트</strong>를 통과한 신호만 위험 근거로 제시 — 방향 규칙이 없는 변수는 fail-closed",
       "데이터 드리프트(PSI)·온라인/배치 일치 검증 MLOps 모니터링과 회귀 테스트 구축 — 위험도 오차 0 검증",
       "Docker Compose·Nginx로 컨테이너화해 OCI에 자체 도메인 HTTPS 배포",
